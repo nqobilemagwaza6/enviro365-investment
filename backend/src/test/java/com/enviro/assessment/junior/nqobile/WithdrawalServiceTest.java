@@ -57,13 +57,26 @@ class WithdrawalServiceTest {
 
     @Test
     void processWithdrawal_deniedWhenUnderAge() {
-        user.setAge(65);
+        user.setAge(30);
         when(userService.findUserById(1L)).thenReturn(user);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> withdrawalService.processWithdrawal(1L, 500.0));
 
-        assertTrue(ex.getMessage().contains("over 65"));
+        assertTrue(ex.getMessage().contains("at least 65"));
+    }
+
+    @Test
+    void processWithdrawal_allowedAtAge65() {
+        user.setAge(65);
+        when(userService.findUserById(1L)).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(withdrawalRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        WithdrawalResponse response = withdrawalService.processWithdrawal(1L, 500.0);
+
+        assertEquals("Withdrawal successful", response.getMessage());
+        assertEquals(4500.0, response.getRemainingBalance());
     }
 
     @Test

@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ProfileStateService } from '../../services/profile-state.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { switchMap } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +22,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private profileState: ProfileStateService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
@@ -37,10 +41,18 @@ export class LoginComponent {
     this.errorMessage = '';
 
     const { email, password } = this.loginForm.value;
-    this.authService.login(email, password).subscribe({
+    this.authService.login(email, password).pipe(
+      switchMap((response) => this.profileState.loadProfile(response.userId))
+    ).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/dashboard']);
+        Swal.fire({
+          icon: 'success',
+          title: 'Login successful',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        this.router.navigateByUrl('/dashboard', { replaceUrl: true });
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;

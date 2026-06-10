@@ -1,5 +1,5 @@
 <div class="app-layout">
-  @if (authService.isLoggedIn()) {
+  @if (authService.currentUserId())  {
     <nav class="navbar">
       <div class="nav-brand">Enviro365 Investments</div>
       <div class="nav-links">

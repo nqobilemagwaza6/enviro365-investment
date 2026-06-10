@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ProfileStateService } from '../../services/profile-state.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +21,7 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private profileState: ProfileStateService,
     private router: Router
   ) {
     this.registerForm = this.fb.group({
@@ -40,10 +43,12 @@ export class RegisterComponent {
     this.loading = true;
     this.errorMessage = '';
 
-    this.authService.register(this.registerForm.value).subscribe({
+    this.authService.register(this.registerForm.value).pipe(
+      switchMap((response) => this.profileState.loadProfile(response.userId))
+    ).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/dashboard']);
+        this.router.navigateByUrl('/dashboard', { replaceUrl: true });
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;

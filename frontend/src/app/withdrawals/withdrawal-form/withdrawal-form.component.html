@@ -2,14 +2,14 @@
   <h2>Request Withdrawal</h2>
 
   <div class="balance-info">
-    <p><strong>Current Balance:</strong> {{ currentBalance | currency }}</p>
-    <p><strong>Maximum Withdrawal (90%):</strong> {{ maxWithdrawal | currency }}</p>
-    <p class="note">Withdrawals are only allowed for investors over 65 years old.</p>
+    <p><strong>Current Balance:</strong> {{ currentBalance | currency:'R':'symbol':'1.2-2' }}</p>
+    <p><strong>Maximum Withdrawal (90%):</strong> {{ maxWithdrawal | currency:'R':'symbol':'1.2-2' }}</p>
+    <p class="note">Anyone can register at any age. Withdrawals are only allowed for investors aged 65 or older.</p>
   </div>
 
   <form [formGroup]="withdrawalForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="amount">Withdrawal Amount ($)</label>
+      <label for="amount">Withdrawal Amount (R)</label>
       <input id="amount" type="number" formControlName="amount" step="0.01" />
       @if (withdrawalForm.get('amount')?.invalid && withdrawalForm.get('amount')?.touched) {
         <span class="error">Enter a valid amount greater than 0</span>

@@ -1,3 +1,15 @@
+.loading-state {
+  color: #666;
+  padding: 2rem 0;
+  font-size: 1.1rem;
+}
+
+.stat-detail {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

@@ -5,13 +5,14 @@ import { WithdrawalService } from '../../services/withdrawal.service';
 import { PortfolioService } from '../../services/portfolio.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrencyPipe } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-withdrawal-form',
   standalone: true,
   imports: [ReactiveFormsModule, CurrencyPipe],
   templateUrl: './withdrawal-form.component.html',
-  styleUrl: './withdrawal-form.component.css'
+  styleUrl: './withdrawal-form.component.css',
 })
 export class WithdrawalFormComponent implements OnInit {
   withdrawalForm: FormGroup;
@@ -25,10 +26,10 @@ export class WithdrawalFormComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private withdrawalService: WithdrawalService,
-    private portfolioService: PortfolioService
+    private portfolioService: PortfolioService,
   ) {
     this.withdrawalForm = this.fb.group({
-      amount: [null, [Validators.required, Validators.min(0.01)]]
+      amount: [null, [Validators.required, Validators.min(0.01)]],
     });
   }
 
@@ -43,13 +44,20 @@ export class WithdrawalFormComponent implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         this.errorMessage = err.error?.message || 'Failed to load balance';
-      }
+      },
     });
   }
 
   onSubmit(): void {
     if (this.withdrawalForm.invalid) {
       this.withdrawalForm.markAllAsTouched();
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Input',
+        text: 'Please enter a valid withdrawal amount (greater than 0)',
+      });
+
       return;
     }
 
@@ -57,22 +65,37 @@ export class WithdrawalFormComponent implements OnInit {
     if (!userId) return;
 
     const amount = this.withdrawalForm.value.amount;
+
     this.loading = true;
-    this.successMessage = '';
-    this.errorMessage = '';
 
     this.withdrawalService.withdraw(userId, amount).subscribe({
-      next: (response) => {
+      next: (res: any) => {
         this.loading = false;
-        this.successMessage = `${response.message}. Remaining balance: $${response.remainingBalance}`;
-        this.currentBalance = response.remainingBalance;
-        this.maxWithdrawal = response.remainingBalance * 0.9;
+
+        const remaining = res.remainingBalance;
+
         this.withdrawalForm.reset();
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Withdrawal Successful',
+          text: `${res.message}. Remaining balance: R${remaining}`,
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+            window.location.reload();
+          })
       },
-      error: (err: HttpErrorResponse) => {
+
+      error: (err: any) => {
         this.loading = false;
-        this.errorMessage = err.error?.message || 'Withdrawal failed';
-      }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Withdrawal Failed',
+          text: err.error?.message || 'Something went wrong',
+        });
+      },
     });
   }
 }

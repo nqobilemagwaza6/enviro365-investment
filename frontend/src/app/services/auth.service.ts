@@ -1,8 +1,9 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse } from '../models/user.model';
+import { ProfileStateService } from './profile-state.service';
 
 const API_URL = 'http://localhost:8080/api/auth';
 
@@ -10,12 +11,13 @@ const API_URL = 'http://localhost:8080/api/auth';
 export class AuthService {
   private readonly tokenKey = 'enviro_jwt';
   private readonly userIdKey = 'enviro_user_id';
+  private readonly profileState = inject(ProfileStateService);
 
   currentUserId = signal<number | null>(this.getStoredUserId());
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
   ) {}
 
   register(data: {
@@ -26,22 +28,27 @@ export class AuthService {
     age?: number;
     balance?: number;
   }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${API_URL}/register`, data).pipe(
-      tap((response) => this.storeAuth(response))
-    );
+    return this.http
+      .post<AuthResponse>(`${API_URL}/register`, data)
+      .pipe(tap((response) => this.storeAuth(response)));
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${API_URL}/login`, { email, password }).pipe(
-      tap((response) => this.storeAuth(response))
-    );
+    return this.http
+      .post<AuthResponse>(`${API_URL}/login`, { email, password })
+      .pipe(tap((response) => this.storeAuth(response)));
   }
 
   logout(): void {
+    this.clearSession();
+    this.router.navigate(['/login']);
+  }
+
+  clearSession(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userIdKey);
     this.currentUserId.set(null);
-    this.router.navigate(['/login']);
+    this.profileState.clear();
   }
 
   getToken(): string | null {
@@ -49,9 +56,8 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return this.currentUserId() !== null;
   }
-
   getUserId(): number | null {
     return this.currentUserId();
   }

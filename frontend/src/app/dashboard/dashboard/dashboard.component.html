@@ -1,28 +1,44 @@
 <div class="page-container">
   <h2>Portfolio Dashboard</h2>
 
-  @if (errorMessage) {
-    <div class="alert alert-error">{{ errorMessage }}</div>
+  @if (profileState.loading() && !profileState.profile()) {
+    <div class="loading-state">Loading your portfolio...</div>
   }
 
-  @if (profile) {
+  @if (profileState.error()) {
+    <div class="alert alert-error">{{ profileState.error() }}</div>
+  }
+
+  @if (profileState.profile(); as profile) {
     <div class="dashboard-grid">
       <div class="stat-card">
         <h3>Investor</h3>
         <p class="stat-value">{{ profile.firstName }} {{ profile.lastName }}</p>
+        <p class="stat-detail">{{ profile.email }}</p>
       </div>
+
       <div class="stat-card">
         <h3>Balance</h3>
-        <p class="stat-value">{{ profile.balance | currency }}</p>
-      </div>
+        <p class="stat-value">{{ profile.balance | currency:'R':'symbol':'1.2-2' }}</p>      </div>
+
       <div class="stat-card">
         <h3>Age</h3>
         <p class="stat-value">{{ profile.age }}</p>
       </div>
+
+      <div class="stat-card">
+        <h3>Role</h3>
+        <p class="stat-value">{{ profile.role }}</p>
+      </div>
+
       <div class="stat-card">
         <h3>Withdrawal Eligible</h3>
-        <p class="stat-value" [class.eligible]="profile.age > 65" [class.not-eligible]="profile.age <= 65">
-          {{ profile.age > 65 ? 'Yes' : 'No (must be over 65)' }}
+        <p
+          class="stat-value"
+          [class.eligible]="profile.age >= 65"
+          [class.not-eligible]="profile.age < 65"
+        >
+          {{ profile.age >= 65 ? 'Yes' : 'No (must be at least 65)' }}
         </p>
       </div>
     </div>

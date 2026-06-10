@@ -141,7 +141,7 @@ The UI runs at **http://localhost:4200**
 
 ### Withdrawal Business Rules
 
-1. User age must be **greater than 65**
+1. User age must be **at least 65** (any age may register)
 2. Amount cannot exceed available balance
 3. Amount cannot exceed **90%** of balance
 

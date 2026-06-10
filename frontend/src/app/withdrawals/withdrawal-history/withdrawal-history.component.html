@@ -39,8 +39,7 @@
         @for (item of history; track item.id) {
           <tr>
             <td>{{ item.id }}</td>
-            <td>{{ item.amount | currency }}</td>
-            <td>{{ item.createdAt | date:'medium' }}</td>
+            <td>{{ item.amount | currency:'R' :'symbol':'1.2-2' }}</td>            <td>{{ item.createdAt | date:'medium' }}</td>
             <td>
               <span class="status" [class.success]="item.status === 'SUCCESS'">{{ item.status }}</span>
             </td>

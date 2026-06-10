@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { PortfolioService } from '../../services/portfolio.service';
+import { ProfileStateService } from '../../services/profile-state.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserProfile } from '../../models/user.model';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
@@ -11,28 +10,29 @@ import { CurrencyPipe } from '@angular/common';
   standalone: true,
   imports: [RouterLink, CurrencyPipe],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
-  profile: UserProfile | null = null;
-  errorMessage = '';
-
   constructor(
-    private authService: AuthService,
-    private portfolioService: PortfolioService
+    public authService: AuthService,
+    public profileState: ProfileStateService,
   ) {}
 
   ngOnInit(): void {
     const userId = this.authService.getUserId();
-    if (!userId) return;
+    if (!userId) {
+      this.profileState.setError('User not logged in');
+      return;
+    }
 
-    this.portfolioService.getPortfolio(userId).subscribe({
-      next: (profile) => {
-        this.profile = profile;
-      },
+    if (this.profileState.profile()) {
+      return;
+    }
+
+    this.profileState.loadProfile(userId).subscribe({
       error: (err: HttpErrorResponse) => {
-        this.errorMessage = err.error?.message || 'Failed to load portfolio';
-      }
+        this.profileState.setError(err.error?.message || 'Failed to load portfolio');
+      },
     });
   }
 }
