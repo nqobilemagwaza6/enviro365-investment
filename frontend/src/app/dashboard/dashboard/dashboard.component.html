@@ -1,0 +1,36 @@
+<div class="page-container">
+  <h2>Portfolio Dashboard</h2>
+
+  @if (errorMessage) {
+    <div class="alert alert-error">{{ errorMessage }}</div>
+  }
+
+  @if (profile) {
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <h3>Investor</h3>
+        <p class="stat-value">{{ profile.firstName }} {{ profile.lastName }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Balance</h3>
+        <p class="stat-value">{{ profile.balance | currency }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Age</h3>
+        <p class="stat-value">{{ profile.age }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Withdrawal Eligible</h3>
+        <p class="stat-value" [class.eligible]="profile.age > 65" [class.not-eligible]="profile.age <= 65">
+          {{ profile.age > 65 ? 'Yes' : 'No (must be over 65)' }}
+        </p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a routerLink="/profile" class="btn btn-secondary">Edit Profile</a>
+      <a routerLink="/withdrawals" class="btn btn-primary">Make Withdrawal</a>
+      <a routerLink="/withdrawals/history" class="btn btn-secondary">View History</a>
+    </div>
+  }
+</div>

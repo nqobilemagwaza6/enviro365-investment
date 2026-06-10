@@ -1,0 +1,52 @@
+<div class="page-container">
+  <h2>Withdrawal History</h2>
+
+  <div class="export-section">
+    <h3>Export to CSV</h3>
+    <form [formGroup]="filterForm" class="filter-form">
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input id="startDate" type="date" formControlName="startDate" />
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input id="endDate" type="date" formControlName="endDate" />
+      </div>
+      <button type="button" class="btn btn-primary" (click)="exportCsv()">Download CSV</button>
+    </form>
+    @if (exportMessage) {
+      <p class="export-message">{{ exportMessage }}</p>
+    }
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-error">{{ errorMessage }}</div>
+  }
+
+  @if (history.length === 0) {
+    <p class="empty-state">No withdrawal history found.</p>
+  } @else {
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of history; track item.id) {
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.amount | currency }}</td>
+            <td>{{ item.createdAt | date:'medium' }}</td>
+            <td>
+              <span class="status" [class.success]="item.status === 'SUCCESS'">{{ item.status }}</span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

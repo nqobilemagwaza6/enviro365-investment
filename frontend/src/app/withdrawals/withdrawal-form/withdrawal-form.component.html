@@ -1,0 +1,30 @@
+<div class="page-container">
+  <h2>Request Withdrawal</h2>
+
+  <div class="balance-info">
+    <p><strong>Current Balance:</strong> {{ currentBalance | currency }}</p>
+    <p><strong>Maximum Withdrawal (90%):</strong> {{ maxWithdrawal | currency }}</p>
+    <p class="note">Withdrawals are only allowed for investors over 65 years old.</p>
+  </div>
+
+  <form [formGroup]="withdrawalForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="amount">Withdrawal Amount ($)</label>
+      <input id="amount" type="number" formControlName="amount" step="0.01" />
+      @if (withdrawalForm.get('amount')?.invalid && withdrawalForm.get('amount')?.touched) {
+        <span class="error">Enter a valid amount greater than 0</span>
+      }
+    </div>
+
+    @if (successMessage) {
+      <div class="alert alert-success">{{ successMessage }}</div>
+    }
+    @if (errorMessage) {
+      <div class="alert alert-error">{{ errorMessage }}</div>
+    }
+
+    <button type="submit" class="btn btn-primary" [disabled]="loading">
+      {{ loading ? 'Processing...' : 'Submit Withdrawal' }}
+    </button>
+  </form>
+</div>

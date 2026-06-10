@@ -1,0 +1,18 @@
+<div class="app-layout">
+  @if (authService.isLoggedIn()) {
+    <nav class="navbar">
+      <div class="nav-brand">Enviro365 Investments</div>
+      <div class="nav-links">
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/profile" routerLinkActive="active">Profile</a>
+        <a routerLink="/withdrawals" routerLinkActive="active">Withdraw</a>
+        <a routerLink="/withdrawals/history" routerLinkActive="active">History</a>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </nav>
+  }
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+</div>
