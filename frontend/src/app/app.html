@@ -1,18 +1,27 @@
 <div class="app-layout">
   @if (authService.currentUserId())  {
     <nav class="navbar">
+
       <div class="nav-brand">Enviro365 Investments</div>
-      <div class="nav-links">
-        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-        <a routerLink="/profile" routerLinkActive="active">Profile</a>
-        <a routerLink="/withdrawals" routerLinkActive="active">Withdraw</a>
-        <a routerLink="/withdrawals/history" routerLinkActive="active">History</a>
+
+      <!-- HAMBURGER BUTTON (MOBILE ONLY) -->
+      <div class="nav-toggle" (click)="toggleMenu()">☰</div>
+
+      <!-- NAV LINKS -->
+      <div class="nav-links" [class.active]="menuOpen">
+
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">Dashboard</a>
+        <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()">Profile</a>
+        <a routerLink="/withdrawals" routerLinkActive="active" (click)="closeMenu()">Withdraw</a>
+        <a routerLink="/withdrawals/history" routerLinkActive="active" (click)="closeMenu()">History</a>
+
         <button class="btn-logout" (click)="logout()">Logout</button>
       </div>
+
     </nav>
   }
 
   <main class="main-content">
-    <router-outlet />
+    <router-outlet></router-outlet>
   </main>
 </div>

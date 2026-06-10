@@ -1,3 +1,9 @@
+body {
+  background-color: #e6f1fb;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
 .auth-container {
   display: flex;
   justify-content: center;
@@ -6,23 +12,27 @@
 }
 
 .auth-card {
-  background: white;
+  background: #acacac;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 2px 16px rgba(55, 138, 221, 0.1);
   width: 100%;
   max-width: 480px;
+  border-top: 4px solid #378add;
 }
 
 .auth-card h1 {
-  color: #2e7d32;
-  font-size: 1.5rem;
+  color: #185fa5;
+  font-size: 1.3rem;
   margin-bottom: 0.25rem;
+  font-weight: 600;
 }
 
 .auth-card h2 {
   margin-bottom: 1.5rem;
   color: #333;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 .form-row {
@@ -42,19 +52,41 @@
   display: block;
   margin-bottom: 0.25rem;
   font-weight: 500;
+  font-size: 0.9rem;
+  color: #444;
 }
 
 .form-group input {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #b5d4f4;
+  border-radius: 5px;
   box-sizing: border-box;
+  font-size: 0.95rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #378add;
+  box-shadow: 0 0 0 3px rgba(55, 138, 221, 0.15);
 }
 
 .error {
   color: #c62828;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  margin-top: 3px;
+  display: block;
+}
+
+.age-note {
+  background: #e6f1fb;
+  border-left: 3px solid #378add;
+  border-radius: 0 4px 4px 0;
+  color: #185fa5;
+  font-size: 0.875rem;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 1rem;
 }
 
 .alert-error {
@@ -63,20 +95,27 @@
   padding: 0.75rem;
   border-radius: 4px;
   margin-bottom: 1rem;
+  border-left: 3px solid #c62828;
 }
 
 .btn {
   width: 100%;
   padding: 0.75rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.15s;
 }
 
 .btn-primary {
-  background: #2e7d32;
+  background: #378add;
   color: white;
+}
+
+.btn-primary:hover {
+  background: #185fa5;
 }
 
 .btn-primary:disabled {
@@ -84,13 +123,19 @@
   cursor: not-allowed;
 }
 
-.age-note {
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-
 .auth-link {
   text-align: center;
   margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.auth-link a {
+  color: #185fa5;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
 }

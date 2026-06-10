@@ -1,4 +1,4 @@
-<div class="auth-container">
+<div class="auth-container blue-bg">
   <div class="auth-card">
     <h1>Enviro365 Investments</h1>
     <h2>Create Account</h2>
@@ -12,6 +12,7 @@
             <span class="error">Required</span>
           }
         </div>
+
         <div class="form-group">
           <label for="lastName">Last Name</label>
           <input id="lastName" type="text" formControlName="lastName" />
@@ -44,6 +45,7 @@
           <label for="age">Age</label>
           <input id="age" type="number" formControlName="age" min="0" />
         </div>
+
         <div class="form-group">
           <label for="balance">Initial Balance</label>
           <input id="balance" type="number" formControlName="balance" step="0.01" />
@@ -59,6 +61,8 @@
       </button>
     </form>
 
-    <p class="auth-link">Already have an account? <a routerLink="/login">Sign In</a></p>
+    <p class="auth-link">
+      Already have an account? <a routerLink="/login">Sign In</a>
+    </p>
   </div>
 </div>
